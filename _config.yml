@@ -2,9 +2,9 @@
 #      Main Configs       #
 # ----------------------- #
 
-url: http://yoursite.com
-title: My Octopress Blog
-subtitle: A blogging framework for hackers.
+url: http://timstermatic.github.io
+title: Tim Roberts 
+subtitle:  Software Developer and Journeyman Writer
 author: Your Name
 simple_search: http://google.com/search
 description:
