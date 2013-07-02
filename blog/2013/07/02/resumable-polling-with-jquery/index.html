@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Tim Roberts</title>
+  <title>Resumable polling with jQuery - Tim Roberts</title>
   <meta name="author" content="Your Name">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://timstermatic.github.io">
+  <link rel="canonical" href="http://timstermatic.github.io/blog/2013/07/02/resumable-polling-with-jquery">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Tim Roberts" type="application/atom+xml">
@@ -63,15 +63,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/07/02/resumable-polling-with-jquery/">Resumable Polling With jQuery</a></h1>
+      <h1 class="entry-title">Resumable Polling With jQuery</h1>
     
     
       <p class="meta">
@@ -94,7 +91,7 @@
   </header>
 
 
-  <div class="entry-content"><p>Here&rsquo;s a very simplified version of a technique I&rsquo;ve used recently on our startup video platform, <em>zumoflow</em>. We needed a way of updating our mongodb engagement table periodically, only when a video was being played. For this we needed to set off a periodic poll when video play started and pause the poll when the video play was paused or stopped.</p>
+<div class="entry-content"><p>Here&rsquo;s a very simplified version of a technique I&rsquo;ve used recently on our startup video platform, <em>zumoflow</em>. We needed a way of updating our mongodb engagement table periodically, only when a video was being played. For this we needed to set off a periodic poll when video play started and pause the poll when the video play was paused or stopped.</p>
 
 <p>The following code shows the skeleton for two simple events. One to start and one to stop the poll:</p>
 
@@ -138,18 +135,51 @@ function doPoll() {
 </ol>
 
 </div>
+
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
-    </article>
+<time datetime="2013-07-02T12:48:00+02:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
   
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://timstermatic.github.io/blog/2013/07/02/resumable-polling-with-jquery/" data-via="" data-counturl="http://timstermatic.github.io/blog/2013/07/02/resumable-polling-with-jquery/" >Tweet</a>
+  
+  
+  
 </div>
+
+    
+    <p class="meta">
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
 <aside class="sidebar">
   
     <section>
@@ -169,6 +199,7 @@ function doPoll() {
 
   
 </aside>
+
 
     </div>
   </div>
