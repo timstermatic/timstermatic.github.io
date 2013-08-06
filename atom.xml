@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Roberts]]></title>
   <link href="http://timstermatic.github.io/atom.xml" rel="self"/>
   <link href="http://timstermatic.github.io/"/>
-  <updated>2013-08-01T14:35:44+02:00</updated>
+  <updated>2013-08-06T13:14:20+02:00</updated>
   <id>http://timstermatic.github.io/</id>
   <author>
     <name><![CDATA[Your Name]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Async Unique validation with expressjs and mongoose]]></title>
+    <link href="http://timstermatic.github.io/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose/"/>
+    <updated>2013-08-06T13:02:00+02:00</updated>
+    <id>http://timstermatic.github.io/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose</id>
+    <content type="html"><![CDATA[<p>In a nutshell: here is how to add elegant validation with a useful error message for a field being unique. This is great for usernames, email addresses etc. that can only appear once in your collection.</p>
+
+<p>Line 16 onwards  are the ones to note. It&rsquo;s a custom validation rule set on &ldquo;email&rdquo;. What&rsquo;s important is that it adds a callback to the validate function which I have arbitrarily named <code>respond</code>. Notice that I can now search for an existing user and in the callback for that search, if a user is found, I can return false to my validation by passing false through my <code>respond</code> callback.</p>
+
+<div><script src='https://gist.github.com/6163577.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Resumable polling with jQuery]]></title>
