@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Tim Roberts]]></title>
+  <link href="http://timstermatic.github.io/atom.xml" rel="self"/>
+  <link href="http://timstermatic.github.io/"/>
+  <updated>2013-08-15T17:09:50+02:00</updated>
+  <id>http://timstermatic.github.io/</id>
+  <author>
+    <name><![CDATA[Tim Roberts]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Sending emails with Node.js and Amazon SES]]></title>
+    <link href="http://timstermatic.github.io/blog/2013/08/14/sending-emails-with-node-dot-js-and-amazon-ses/"/>
+    <updated>2013-08-14T15:16:00+02:00</updated>
+    <id>http://timstermatic.github.io/blog/2013/08/14/sending-emails-with-node-dot-js-and-amazon-ses</id>
+    <content type="html"><![CDATA[<p>In a nutshell: SES is a reliable way to unload the burden of sending emails. Here&rsquo;s how to harness Amazon&rsquo;s Node.js SDK to send emails. The example below is a raw Node.js app, but should be easy enough to integrate with your framework of choice &ndash; e.g. Express / Geddy.</p>
+
+<p>I&rsquo;ve posted all the code in <a href="https://github.com/timstermatic/node-amazon-ses-example">an example on github</a>.</p>
+
+<h3>Some prerequisites</h3>
+
+<ol>
+<li>An <a href="http://aws.amazon.com">Amazon AWS account</a> with <a href="http://aws.amazon.com/ses/">SES</a> enabled.</li>
+<li>Your Amazon Key and Secret.</li>
+<li><a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/verify-email-addresses.html">Verfiy an email address at SES</a>.</li>
+</ol>
+
+
+<p>First, install the Amazon SDK.</p>
+
+<pre><code>npm install aws-sdk
+</code></pre>
+
+<p>Or you can add it as a dependency to your <code>package.json</code>:</p>
+
+<pre><code>{
+    "dependencies": {
+        "aws-sdk": "latest"
+    }
+}
+</code></pre>
+
+<p>Then create a config file to hold your amazon credentions &ndash; e.g. config.json:</p>
+
+<pre><code>{ "accessKeyId": "YOURAMAZONKEY", "secretAccessKey": "YOURAMAZONSECRET", "region": "us-west-2" }
+</code></pre>
+
+<p>This example is a single script, but it would work just fine integrated into an express route etc. There&rsquo;s an explanation below:</p>
+
+<pre><code>// load aws sdk
+var aws = require('aws-sdk');
+
+// load aws config
+aws.config.loadFromPath('config.json');
+
+// load AWS SES
+var ses = new aws.SES({apiVersion: '2010-12-01'});
+
+// send to list
+var to = ['email@example.com']
+
+// this must relate to a verified SES account
+var from = 'emailc@example.com'
+
+
+// this sends the email
+// @todo - add HTML version
+ses.sendEmail( { 
+   Source: from, 
+   Destination: { ToAddresses: to },
+   Message: {
+       Subject:Source {
+          Data: 'A Message To You Rudy'
+       },
+       Body: {
+           Text: {
+               Data: 'Stop your messing around',
+           }
+        }
+   }
+}
+, function(err, data) {
+    if(err) throw err
+        console.log('Email sent:');
+        console.log(data)console;
+ });
+</code></pre>
+
+<p>The ses.sendEmail passes a json string with the necessary parameters required by Amazon SES. This example sends a text message, but if you look over <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES_20101201.html#sendEmail-property">the docs for the sendEmail call</a> you will a HTML version can be easily passed (along with a host of other parameters).</p>
+
+<p>The callback function accepts the defacto <code>err</code> argument for collecting any errors and above use the second parameter <code>data</code> to output the information the service sends back on a successful send.</p>
+
+<h3>Where to go from here.</h3>
+
+<p>The next logical step in this script would be to read in a text file for the body so you can send templated emails. Look to <a href="http://nodejs.org/api/fs.html">Node.js&#8217; <code>fs</code></a> to achieve something like that.</p>
+
+<p>You could also wrap this functionality in a module so you can reuse it across your app with a more succint syntax..</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Async Unique validation with expressjs and mongoose]]></title>
+    <link href="http://timstermatic.github.io/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose/"/>
+    <updated>2013-08-06T13:02:00+02:00</updated>
+    <id>http://timstermatic.github.io/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose</id>
+    <content type="html"><![CDATA[<p>In a nutshell: here is how to add elegant validation with a useful error message for a field being unique. This is great for usernames, email addresses etc. that can only appear once in your collection.</p>
+
+<p>Line 16 onwards  are the ones to note. It&rsquo;s a custom validation rule set on &ldquo;email&rdquo;. What&rsquo;s important is that it adds a callback to the validate function which I have arbitrarily named <code>respond</code>. Notice that I can now search for an existing user and in the callback for that search, if a user is found, I can return false to my validation by passing false through my <code>respond</code> callback.</p>
+
+<div><script src='https://gist.github.com/6163577.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Resumable polling with jQuery]]></title>
+    <link href="http://timstermatic.github.io/blog/2013/07/02/resumable-polling-with-jquery/"/>
+    <updated>2013-07-02T12:48:00+02:00</updated>
+    <id>http://timstermatic.github.io/blog/2013/07/02/resumable-polling-with-jquery</id>
+    <content type="html"><![CDATA[<p>Here&rsquo;s a very simplified version of a technique I&rsquo;ve used recently on our startup video platform, <em>zumoflow</em>. We needed a way of updating our mongodb engagement table periodically, only when a video was being played. For this we needed to set off a periodic poll when video play started and pause the poll when the video play was paused or stopped.</p>
+
+<p>The following code shows the skeleton for two simple events. One to start and one to stop the poll:</p>
+
+<pre><code>// initialize a timer variable
+// we need to use this to reference stopping the timeout
+
+var timer;
+
+// this function starts the poll and binds it to a variable called timer
+// There's a configurable 2000 ms timeout on calling the function
+
+function doPoll() {
+    $.post('http://localhost', data, function(data) {
+            timer = setTimeout(doPoll, 2000);
+    })
+}
+</code></pre>
+
+<p>Then we can attach the event to start the poll to any element:</p>
+
+<pre><code>$('.start').click( function() {
+    doPoll();
+    return false;
+});
+</code></pre>
+
+<p>Finally we can attach the stop event which clears the timeout using the JavaScript <code>clearTimeout</code> function:</p>
+
+<pre><code>$('.stop').click( function() {
+    clearTimeout(timer);
+    return false;
+});
+</code></pre>
+
+<p>References:</p>
+
+<ol>
+<li><a href="http://api.jquery.com/jQuery.post/">jQuery $.post documentation</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/window.setTimeout">window.setTimeout</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/window.clearTimeout">window.clearTimeout</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>

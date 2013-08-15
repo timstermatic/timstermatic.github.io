@@ -1,0 +1,415 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Tim Roberts</title>
+  <meta name="author" content="Tim Roberts">
+
+  
+  <meta name="description" content="In a nutshell: SES is a reliable way to unload the burden of sending emails. Here&rsquo;s how to harness Amazon&rsquo;s Node.js SDK to send emails. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://timstermatic.github.io">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Tim Roberts" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/lib/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Tim Roberts</a></h1>
+  
+    <h2>Software Developer and Journeyman Writer</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="http://google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:timstermatic.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/14/sending-emails-with-node-dot-js-and-amazon-ses/">Sending Emails With Node.js and Amazon SES</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-14T15:16:00+02:00" pubdate data-updated="true">Aug 14<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In a nutshell: SES is a reliable way to unload the burden of sending emails. Here&rsquo;s how to harness Amazon&rsquo;s Node.js SDK to send emails. The example below is a raw Node.js app, but should be easy enough to integrate with your framework of choice &ndash; e.g. Express / Geddy.</p>
+
+<p>I&rsquo;ve posted all the code in <a href="https://github.com/timstermatic/node-amazon-ses-example">an example on github</a>.</p>
+
+<h3>Some prerequisites</h3>
+
+<ol>
+<li>An <a href="http://aws.amazon.com">Amazon AWS account</a> with <a href="http://aws.amazon.com/ses/">SES</a> enabled.</li>
+<li>Your Amazon Key and Secret.</li>
+<li><a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/verify-email-addresses.html">Verfiy an email address at SES</a>.</li>
+</ol>
+
+
+<p>First, install the Amazon SDK.</p>
+
+<pre><code>npm install aws-sdk
+</code></pre>
+
+<p>Or you can add it as a dependency to your <code>package.json</code>:</p>
+
+<pre><code>{
+    "dependencies": {
+        "aws-sdk": "latest"
+    }
+}
+</code></pre>
+
+<p>Then create a config file to hold your amazon credentions &ndash; e.g. config.json:</p>
+
+<pre><code>{ "accessKeyId": "YOURAMAZONKEY", "secretAccessKey": "YOURAMAZONSECRET", "region": "us-west-2" }
+</code></pre>
+
+<p>This example is a single script, but it would work just fine integrated into an express route etc. There&rsquo;s an explanation below:</p>
+
+<pre><code>// load aws sdk
+var aws = require('aws-sdk');
+
+// load aws config
+aws.config.loadFromPath('config.json');
+
+// load AWS SES
+var ses = new aws.SES({apiVersion: '2010-12-01'});
+
+// send to list
+var to = ['email@example.com']
+
+// this must relate to a verified SES account
+var from = 'emailc@example.com'
+
+
+// this sends the email
+// @todo - add HTML version
+ses.sendEmail( { 
+   Source: from, 
+   Destination: { ToAddresses: to },
+   Message: {
+       Subject:Source {
+          Data: 'A Message To You Rudy'
+       },
+       Body: {
+           Text: {
+               Data: 'Stop your messing around',
+           }
+        }
+   }
+}
+, function(err, data) {
+    if(err) throw err
+        console.log('Email sent:');
+        console.log(data)console;
+ });
+</code></pre>
+
+<p>The ses.sendEmail passes a json string with the necessary parameters required by Amazon SES. This example sends a text message, but if you look over <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES_20101201.html#sendEmail-property">the docs for the sendEmail call</a> you will a HTML version can be easily passed (along with a host of other parameters).</p>
+
+<p>The callback function accepts the defacto <code>err</code> argument for collecting any errors and above use the second parameter <code>data</code> to output the information the service sends back on a successful send.</p>
+
+<h3>Where to go from here.</h3>
+
+<p>The next logical step in this script would be to read in a text file for the body so you can send templated emails. Look to <a href="http://nodejs.org/api/fs.html">Node.js&#8217; <code>fs</code></a> to achieve something like that.</p>
+
+<p>You could also wrap this functionality in a module so you can reuse it across your app with a more succint syntax..</p>
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose/">Async Unique Validation With Expressjs and Mongoose</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-08-06T13:02:00+02:00" pubdate data-updated="true">Aug 6<span>th</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>In a nutshell: here is how to add elegant validation with a useful error message for a field being unique. This is great for usernames, email addresses etc. that can only appear once in your collection.</p>
+
+<p>Line 16 onwards  are the ones to note. It&rsquo;s a custom validation rule set on &ldquo;email&rdquo;. What&rsquo;s important is that it adds a callback to the validate function which I have arbitrarily named <code>respond</code>. Notice that I can now search for an existing user and in the callback for that search, if a user is found, I can return false to my validation by passing false through my <code>respond</code> callback.</p>
+
+<div><script src='https://gist.github.com/6163577.js'></script>
+<noscript><pre><code></code></pre></noscript></div>
+
+
+
+</div>
+  
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2013/07/02/resumable-polling-with-jquery/">Resumable Polling With jQuery</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2013-07-02T12:48:00+02:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Here&rsquo;s a very simplified version of a technique I&rsquo;ve used recently on our startup video platform, <em>zumoflow</em>. We needed a way of updating our mongodb engagement table periodically, only when a video was being played. For this we needed to set off a periodic poll when video play started and pause the poll when the video play was paused or stopped.</p>
+
+<p>The following code shows the skeleton for two simple events. One to start and one to stop the poll:</p>
+
+<pre><code>// initialize a timer variable
+// we need to use this to reference stopping the timeout
+
+var timer;
+
+// this function starts the poll and binds it to a variable called timer
+// There's a configurable 2000 ms timeout on calling the function
+
+function doPoll() {
+    $.post('http://localhost', data, function(data) {
+            timer = setTimeout(doPoll, 2000);
+    })
+}
+</code></pre>
+
+<p>Then we can attach the event to start the poll to any element:</p>
+
+<pre><code>$('.start').click( function() {
+    doPoll();
+    return false;
+});
+</code></pre>
+
+<p>Finally we can attach the stop event which clears the timeout using the JavaScript <code>clearTimeout</code> function:</p>
+
+<pre><code>$('.stop').click( function() {
+    clearTimeout(timer);
+    return false;
+});
+</code></pre>
+
+<p>References:</p>
+
+<ol>
+<li><a href="http://api.jquery.com/jQuery.post/">jQuery $.post documentation</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/window.setTimeout">window.setTimeout</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/window.clearTimeout">window.clearTimeout</a></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
+  
+  <div class="pagination">
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2013/08/14/sending-emails-with-node-dot-js-and-amazon-ses/">Sending Emails With Node.js and Amazon SES</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose/">Async Unique Validation With Expressjs and Mongoose</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/02/resumable-polling-with-jquery/">Resumable Polling With jQuery</a>
+      </li>
+    
+  </ul>
+</section>
+
+<section>
+  <h1>GitHub Repos</h1>
+  <ul id="gh_repos">
+    <li class="loading">Status updating&#8230;</li>
+  </ul>
+  
+  <a href="https://github.com/timstermatic">@timstermatic</a> on GitHub
+  
+  <script type="text/javascript">
+    $(document).ready(function(){
+        if (!window.jXHR){
+            var jxhr = document.createElement('script');
+            jxhr.type = 'text/javascript';
+            jxhr.src = '/javascripts/libs/jXHR.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(jxhr, s);
+        }
+
+        github.showRepos({
+            user: 'timstermatic',
+            count: 0,
+            skip_forks: true,
+            target: '#gh_repos'
+        });
+    });
+  </script>
+  <script src="/javascripts/github.js" type="text/javascript"> </script>
+</section>
+
+
+
+
+
+  
+</aside>
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2013 - Tim Roberts -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+<script type="text/javascript">
+      var disqus_shortname = 'timstermatic-github';
+      
+        
+        var disqus_script = 'count.js';
+      
+    (function () {
+      var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+      dsq.src = 'http://' + disqus_shortname + '.disqus.com/' + disqus_script;
+      (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    }());
+</script>
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
