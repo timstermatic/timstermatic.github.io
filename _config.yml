@@ -5,7 +5,7 @@
 url: http://timstermatic.github.io
 title: Tim Roberts 
 subtitle:  Software Developer and Journeyman Writer
-author: Your Name
+author: Tim Roberts
 simple_search: http://google.com/search
 description:
 
@@ -69,7 +69,7 @@ github_show_profile_link: true
 github_skip_forks: true
 
 # Twitter
-twitter_user:
+twitter_user: timstermatic
 twitter_tweet_button: true
 
 # Google +1
