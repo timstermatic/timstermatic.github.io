@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Roberts]]></title>
   <link href="http://timstermatic.github.io/atom.xml" rel="self"/>
   <link href="http://timstermatic.github.io/"/>
-  <updated>2013-08-15T21:23:35+02:00</updated>
+  <updated>2013-08-16T09:04:52+02:00</updated>
   <id>http://timstermatic.github.io/</id>
   <author>
     <name><![CDATA[Tim Roberts]]></name>
@@ -12,6 +12,23 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MongoDB for Developers Certificate]]></title>
+    <link href="http://timstermatic.github.io/blog/2013/08/16/mongodb-for-developers-certificate/"/>
+    <updated>2013-08-16T08:55:00+02:00</updated>
+    <id>http://timstermatic.github.io/blog/2013/08/16/mongodb-for-developers-certificate</id>
+    <content type="html"><![CDATA[<p>Today I received my MongoDB for Developers certificate. Here it is in most of its glory:</p>
+
+<p><img src="http://timstermatic.github.io/images/mongodb-for-developers-certificate.png" alt="MongoDB for Developers Certificate" /></p>
+
+<p>I&rsquo;d recommend anyone interested in learning about MongoDB to give it a go. The course is 6 weeks long and you also get to learn a bit of Python along the journey. As it&rsquo;s offered by 10gen, the company who develop MongoDB, it&rsquo;s probably the best source of learning on the subject.</p>
+
+<p>There are a few courses specialised by language which you can find on their <a href="https://education.10gen.com/courses/">list of mongodb courses</a>.</p>
+
+<p>I&rsquo;m now on my first week of MongoDB for Node.js developers, and I hear there may be a C# one in the pipeline.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Sending emails with Node.js and Amazon SES]]></title>
