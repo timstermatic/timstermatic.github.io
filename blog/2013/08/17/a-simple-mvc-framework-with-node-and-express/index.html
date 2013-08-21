@@ -5,7 +5,7 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Tim Roberts</title>
+  <title>A simple MVC framework with node and express - Tim Roberts</title>
   <meta name="author" content="Tim Roberts">
 
   
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://timstermatic.github.io">
+  <link rel="canonical" href="http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="Tim Roberts" type="application/atom+xml">
@@ -75,15 +75,12 @@
 </nav>
   <div id="main">
     <div id="content">
-      <div class="blog-index">
+      <div>
+<article class="hentry" role="article">
   
-  
-  
-    <article>
-      
   <header>
     
-      <h1 class="entry-title"><a href="/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/">A Simple MVC Framework With Node and Express</a></h1>
+      <h1 class="entry-title">A Simple MVC Framework With Node and Express</h1>
     
     
       <p class="meta">
@@ -106,7 +103,7 @@
   </header>
 
 
-  <div class="entry-content"><p>I love frameworks. As soon as I dropped my programmer&rsquo;s ego and learned to embrace well conceived conventions over configuration my development and deployment times felt the benefit. On the other hand, I like understanding what is going on underneath the hood which there is a danger of losing sight of when using a framework.</p>
+<div class="entry-content"><p>I love frameworks. As soon as I dropped my programmer&rsquo;s ego and learned to embrace well conceived conventions over configuration my development and deployment times felt the benefit. On the other hand, I like understanding what is going on underneath the hood which there is a danger of losing sight of when using a framework.</p>
 
 <p>And this brings me to why I love node.js and express. For me they provide an boilerplate for a framework: the tools I need to quickly build my own conventions.</p>
 
@@ -285,66 +282,16 @@
 
 <p>I like doing things this way because the controller is mediating both the models and the views which for me is the spirit of MVC. There is also a huge organisational win too: if I want to work on users/signup I know I that my model is in <code>models/user.js</code>; my route is in <code>controllers/users.js</code> and my view is in <code>views/users/signup.jade</code>. And that is what makes MVC such a great pattern.</p>
 </div>
-  
-  
 
 
-    </article>
-  
-  
-    <article>
+  <footer>
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/16/mongodb-for-developers-certificate/">MongoDB for Developers Certificate</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
   
 
+<span class="byline author vcard">Posted by <span class="fn">Tim Roberts</span></span>
 
-<time datetime="2013-08-16T08:55:00+02:00" pubdate data-updated="true">Aug 16<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Today I received my MongoDB for Developers certificate. Here it is in most of its glory:</p>
-
-<p><img src="/images/mongodb-for-developers-certificate.png" alt="MongoDB for Developers Certificate" /></p>
-
-<p>I&rsquo;d recommend anyone interested in learning about MongoDB to give it a go. The course is 6 weeks long and you also get to learn a bit of Python along the journey. As it&rsquo;s offered by 10gen, the company who develop MongoDB, it&rsquo;s probably the best source of learning on the subject.</p>
-
-<p>There are a few courses specialised by language which you can find on their <a href="https://education.10gen.com/courses/">list of mongodb courses</a>.</p>
-
-<p>I&rsquo;m now on my first week of MongoDB for Node.js developers, and I hear there may be a C# one in the pipeline.</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/08/14/sending-emails-with-node-dot-js-and-amazon-ses/">Sending Emails With Node.js and Amazon SES</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
 
@@ -356,230 +303,38 @@
   
 
 
-<time datetime="2013-08-14T15:16:00+02:00" pubdate data-updated="true">Aug 14<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In a nutshell: SES is a reliable way to unload the burden of sending emails. Here&rsquo;s how to harness Amazon&rsquo;s Node.js SDK to send emails. The example below is a raw Node.js app, but should be easy enough to integrate with your framework of choice &ndash; e.g. Express / Geddy.</p>
-
-<p>I&rsquo;ve posted all the code in <a href="https://github.com/timstermatic/node-amazon-ses-example">an example on github</a>.</p>
-
-<h3>Some prerequisites</h3>
-
-<ol>
-<li>An <a href="http://aws.amazon.com">Amazon AWS account</a> with <a href="http://aws.amazon.com/ses/">SES</a> enabled.</li>
-<li>Your Amazon Key and Secret.</li>
-<li><a href="http://docs.aws.amazon.com/ses/latest/DeveloperGuide/verify-email-addresses.html">Verfiy an email address at SES</a>.</li>
-</ol>
-
-
-<p>First, install the Amazon SDK.</p>
-
-<pre><code>npm install aws-sdk
-</code></pre>
-
-<p>Or you can add it as a dependency to your <code>package.json</code>:</p>
-
-<pre><code>{
-    "dependencies": {
-        "aws-sdk": "latest"
-    }
-}
-</code></pre>
-
-<p>Then create a config file to hold your amazon credentions &ndash; e.g. config.json:</p>
-
-<pre><code>{ "accessKeyId": "YOURAMAZONKEY", "secretAccessKey": "YOURAMAZONSECRET", "region": "us-west-2" }
-</code></pre>
-
-<p>This example is a single script, but it would work just fine integrated into an express route etc. There&rsquo;s an explanation below:</p>
-
-<pre><code>// load aws sdk
-var aws = require('aws-sdk');
-
-// load aws config
-aws.config.loadFromPath('config.json');
-
-// load AWS SES
-var ses = new aws.SES({apiVersion: '2010-12-01'});
-
-// send to list
-var to = ['email@example.com']
-
-// this must relate to a verified SES account
-var from = 'emailc@example.com'
-
-
-// this sends the email
-// @todo - add HTML version
-ses.sendEmail( { 
-   Source: from, 
-   Destination: { ToAddresses: to },
-   Message: {
-       Subject:Source {
-          Data: 'A Message To You Rudy'
-       },
-       Body: {
-           Text: {
-               Data: 'Stop your messing around',
-           }
-        }
-   }
-}
-, function(err, data) {
-    if(err) throw err
-        console.log('Email sent:');
-        console.log(data)console;
- });
-</code></pre>
-
-<p>The ses.sendEmail passes a json string with the necessary parameters required by Amazon SES. This example sends a text message, but if you look over <a href="http://docs.aws.amazon.com/AWSJavaScriptSDK/latest/AWS/SES_20101201.html#sendEmail-property">the docs for the sendEmail call</a> you will a HTML version can be easily passed (along with a host of other parameters).</p>
-
-<p>The callback function accepts the defacto <code>err</code> argument for collecting any errors and above use the second parameter <code>data</code> to output the information the service sends back on a successful send.</p>
-
-<h3>Where to go from here.</h3>
-
-<p>The next logical step in this script would be to read in a text file for the body so you can send templated emails. Look to <a href="http://nodejs.org/api/fs.html">Node.js&#8217; <code>fs</code></a> to achieve something like that.</p>
-
-<p>You could also wrap this functionality in a module so you can reuse it across your app with a more succint syntax..</p>
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
+<time datetime="2013-08-17T10:59:00+02:00" pubdate data-updated="true">Aug 17<span>th</span>, 2013</time>
       
-  <header>
+
+
+    </p>
     
-      <h1 class="entry-title"><a href="/blog/2013/08/06/async-unique-validation-with-expressjs-and-mongoose/">Async Unique Validation With Expressjs and Mongoose</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
+      <div class="sharing">
   
-
-
-<time datetime="2013-08-06T13:02:00+02:00" pubdate data-updated="true">Aug 6<span>th</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>In a nutshell: here is how to add elegant validation with a useful error message for a field being unique. This is great for usernames, email addresses etc. that can only appear once in your collection.</p>
-
-<p>Line 16 onwards  are the ones to note. It&rsquo;s a custom validation rule set on &ldquo;email&rdquo;. What&rsquo;s important is that it adds a callback to the validate function which I have arbitrarily named <code>respond</code>. Notice that I can now search for an existing user and in the callback for that search, if a user is found, I can return false to my validation by passing false through my <code>respond</code> callback.</p>
-
-<div><script src='https://gist.github.com/6163577.js'></script>
-<noscript><pre><code></code></pre></noscript></div>
-
-
-
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/" data-via="timstermatic" data-counturl="http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/" >Tweet</a>
+  
+  
+  
 </div>
-  
-  
 
-
-    </article>
-  
-  
-    <article>
+    
+    <p class="meta">
       
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2013/07/02/resumable-polling-with-jquery/">Resumable Polling With jQuery</a></h1>
-    
-    
-      <p class="meta">
-        
+        <a class="basic-alignment left" href="/blog/2013/08/16/mongodb-for-developers-certificate/" title="Previous Post: MongoDB for Developers Certificate">&laquo; MongoDB for Developers Certificate</a>
+      
+      
+    </p>
+  </footer>
+</article>
 
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2013-07-02T12:48:00+02:00" pubdate data-updated="true">Jul 2<span>nd</span>, 2013</time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>Here&rsquo;s a very simplified version of a technique I&rsquo;ve used recently on our startup video platform, <em>zumoflow</em>. We needed a way of updating our mongodb engagement table periodically, only when a video was being played. For this we needed to set off a periodic poll when video play started and pause the poll when the video play was paused or stopped.</p>
-
-<p>The following code shows the skeleton for two simple events. One to start and one to stop the poll:</p>
-
-<pre><code>// initialize a timer variable
-// we need to use this to reference stopping the timeout
-
-var timer;
-
-// this function starts the poll and binds it to a variable called timer
-// There's a configurable 2000 ms timeout on calling the function
-
-function doPoll() {
-    $.post('http://localhost', data, function(data) {
-            timer = setTimeout(doPoll, 2000);
-    })
-}
-</code></pre>
-
-<p>Then we can attach the event to start the poll to any element:</p>
-
-<pre><code>$('.start').click( function() {
-    doPoll();
-    return false;
-});
-</code></pre>
-
-<p>Finally we can attach the stop event which clears the timeout using the JavaScript <code>clearTimeout</code> function:</p>
-
-<pre><code>$('.stop').click( function() {
-    clearTimeout(timer);
-    return false;
-});
-</code></pre>
-
-<p>References:</p>
-
-<ol>
-<li><a href="http://api.jquery.com/jQuery.post/">jQuery $.post documentation</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/window.setTimeout">window.setTimeout</a></li>
-<li><a href="https://developer.mozilla.org/en-US/docs/Web/API/window.clearTimeout">window.clearTimeout</a></li>
-</ol>
+  <section>
+    <h1>Comments</h1>
+    <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+  </section>
 
 </div>
-  
-  
 
-
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
 <aside class="sidebar">
   
     <section>
@@ -612,7 +367,7 @@ function doPoll() {
 <section>
   <h1>GitHub Repos</h1>
   <ul id="gh_repos">
-    <li class="loading">Status updating&#8230;</li>
+    <li class="loading">Status updating...</li>
   </ul>
   
   <a href="https://github.com/timstermatic">@timstermatic</a> on GitHub
@@ -645,6 +400,7 @@ function doPoll() {
   
 </aside>
 
+
     </div>
   </div>
   <footer role="contentinfo"><p>
@@ -659,7 +415,10 @@ function doPoll() {
       var disqus_shortname = 'timstermatic-github';
       
         
-        var disqus_script = 'count.js';
+        // var disqus_developer = 1;
+        var disqus_identifier = 'http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/';
+        var disqus_url = 'http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/';
+        var disqus_script = 'embed.js';
       
     (function () {
       var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

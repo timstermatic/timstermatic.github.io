@@ -4,7 +4,7 @@
   <title><![CDATA[Tim Roberts]]></title>
   <link href="http://timstermatic.github.io/atom.xml" rel="self"/>
   <link href="http://timstermatic.github.io/"/>
-  <updated>2013-08-16T09:04:52+02:00</updated>
+  <updated>2013-08-21T10:12:29+02:00</updated>
   <id>http://timstermatic.github.io/</id>
   <author>
     <name><![CDATA[Tim Roberts]]></name>
@@ -12,6 +12,192 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[A simple MVC framework with node and express]]></title>
+    <link href="http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express/"/>
+    <updated>2013-08-17T10:59:00+02:00</updated>
+    <id>http://timstermatic.github.io/blog/2013/08/17/a-simple-mvc-framework-with-node-and-express</id>
+    <content type="html"><![CDATA[<p>I love frameworks. As soon as I dropped my programmer&rsquo;s ego and learned to embrace well conceived conventions over configuration my development and deployment times felt the benefit. On the other hand, I like understanding what is going on underneath the hood which there is a danger of losing sight of when using a framework.</p>
+
+<p>And this brings me to why I love node.js and express. For me they provide an boilerplate for a framework: the tools I need to quickly build my own conventions.</p>
+
+<p>For sure, it&rsquo;s pretty easy to build a site with express as it is, but shifting express closer to a <a href="http://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller">MVC</a> setup is simple.</p>
+
+<h3>MVC in layman&rsquo;s terms.</h3>
+
+<p>When I used my first <a href="http://www.cakephp.org">MVC framework</a> I got bit bad. It&rsquo;s not difficult to see why as a pattern it has stood the test of time. And here is all you need to know to start out:</p>
+
+<ul>
+<li>M is for model. A place to define data structures and methods to interact with your data store.</li>
+<li>V is for view. A place to manage everything the end user sees on his or her screen.</li>
+<li>C is for controller. A place to take user requests, bring data from the model and pass it back to the view.</li>
+</ul>
+
+
+<p>And that&rsquo;s enough of that for now. Here&rsquo;s how I arrange my express apps into a basic MVC structure.</p>
+
+<p>First of all I need three folders in the root of my app.</p>
+
+<ul>
+<li>models</li>
+<li>views</li>
+<li>controllers</li>
+</ul>
+
+
+<p>Now on to the app.js</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">express</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;express&#39;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">,</span><span class="nx">http</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;http&#39;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">,</span><span class="nx">path</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;path&#39;</span><span class="p">);</span>
+</span><span class='line'>      <span class="p">,</span><span class="nx">app</span> <span class="o">=</span> <span class="nx">express</span><span class="p">();</span>
+</span><span class='line'>      <span class="p">,</span><span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fs&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// database connection</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">mongoose</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">mongoose</span><span class="p">.</span><span class="nx">connect</span><span class="p">(</span><span class="s1">&#39;mongodb://localhost/mydb&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// some environment variables</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">,</span> <span class="nx">process</span><span class="p">.</span><span class="nx">env</span><span class="p">.</span><span class="nx">PORT</span> <span class="o">||</span> <span class="mi">3000</span><span class="p">);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;views&#39;</span><span class="p">,</span> <span class="nx">__dirname</span> <span class="o">+</span> <span class="s1">&#39;/views&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">set</span><span class="p">(</span><span class="s1">&#39;view engine&#39;</span><span class="p">,</span> <span class="s1">&#39;jade&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">favicon</span><span class="p">());</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">logger</span><span class="p">(</span><span class="s1">&#39;dev&#39;</span><span class="p">));</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">bodyParser</span><span class="p">());</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">methodOverride</span><span class="p">());</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">cookieParser</span><span class="p">(</span><span class="s1">&#39;your secret here&#39;</span><span class="p">));</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="nx">session</span><span class="p">());</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">router</span><span class="p">);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">use</span><span class="p">(</span><span class="nx">express</span><span class="p">.</span><span class="kr">static</span><span class="p">(</span><span class="nx">path</span><span class="p">.</span><span class="nx">join</span><span class="p">(</span><span class="nx">__dirname</span><span class="p">,</span> <span class="s1">&#39;public&#39;</span><span class="p">)));</span>
+</span><span class='line'>
+</span><span class='line'><span class="c1">// dynamically include routes (Controller)</span>
+</span><span class='line'><span class="nx">fs</span><span class="p">.</span><span class="nx">readdirSync</span><span class="p">(</span><span class="s1">&#39;./controllers&#39;</span><span class="p">).</span><span class="nx">forEach</span><span class="p">(</span><span class="kd">function</span> <span class="p">(</span><span class="nx">file</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="k">if</span><span class="p">(</span><span class="nx">file</span><span class="p">.</span><span class="nx">substr</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">)</span> <span class="o">==</span> <span class="s1">&#39;.js&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="nx">route</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./controllers/&#39;</span> <span class="o">+</span> <span class="nx">file</span><span class="p">);</span>
+</span><span class='line'>      <span class="nx">route</span><span class="p">.</span><span class="nx">controller</span><span class="p">(</span><span class="nx">app</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">}</span>
+</span><span class='line'><span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">http</span><span class="p">.</span><span class="nx">createServer</span><span class="p">(</span><span class="nx">app</span><span class="p">).</span><span class="nx">listen</span><span class="p">(</span><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">),</span> <span class="kd">function</span><span class="p">(){</span>
+</span><span class='line'>  <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s1">&#39;Express server listening on port &#39;</span> <span class="o">+</span> <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;port&#39;</span><span class="p">));</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Much of this file is standard if you are generating your app with express, but there are some important lines. Line 5 is where we include the native <code>fs</code> module so we can dynamically read in our controllers. Then in lines 25 to 30 we read in all js files from the controllers directory. Line 13 is pretty important too as it tells express where we want to store our views.</p>
+
+<p>Now whenever we add a js file to our controllers directory we can format it in such a way that it will contain a group of routes. Here is an example that I place in <code>controllers/users.js</code></p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">mongoose</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">Video</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;../models/user&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span><span class="p">.</span><span class="nx">controller</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">app</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * a home page route</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/signup&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// any logic goes here</span>
+</span><span class='line'>      <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;users/signup&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="cm">/**</span>
+</span><span class='line'><span class="cm"> * About page route</span>
+</span><span class='line'><span class="cm"> */</span>
+</span><span class='line'>  <span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/login&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// any logic goes here</span>
+</span><span class='line'>      <span class="nx">res</span><span class="p">.</span><span class="nx">render</span><span class="p">(</span><span class="s1">&#39;users/login&#39;</span><span class="p">)</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I choose to include my models on a per controller basis (<code>lines 1 to 2</code>), so in my MVC structure they are required in each controller. As modules are cached the first time they are loaded there is no overhead in doing this. Moreover I like having the reference to the models I am using in the file I am using them in.</p>
+
+<p>Line 3 exports all of our routes in the controller function. From here on in you can use the express way of defining routes. But notice that I set my views like this: <code>res.render('users/signup')</code> which results in the view being loaded from <code>views/users/signup.jade</code> in this app.</p>
+
+<p>Finally, for reference, here is what the model in <code>models/user.js</code> may look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">Var</span> <span class="nx">mongoose</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;mongoose&#39;</span><span class="p">)</span>
+</span><span class='line'>      <span class="p">,</span><span class="nx">Schema</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">Schema</span>
+</span><span class='line'>      <span class="nx">userSchema</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Schema</span><span class="p">(</span> <span class="p">{</span>
+</span><span class='line'>          <span class="nx">username</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+</span><span class='line'>          <span class="nx">password</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+</span><span class='line'>      <span class="p">}),</span>
+</span><span class='line'><span class="nx">User</span> <span class="o">=</span> <span class="nx">mongoose</span><span class="p">.</span><span class="nx">model</span><span class="p">(</span><span class="s1">&#39;user&#39;</span><span class="p">,</span> <span class="nx">userSchema</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">User</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>I like doing things this way because the controller is mediating both the models and the views which for me is the spirit of MVC. There is also a huge organisational win too: if I want to work on users/signup I know I that my model is in <code>models/user.js</code>; my route is in <code>controllers/users.js</code> and my view is in <code>views/users/signup.jade</code>. And that is what makes MVC such a great pattern.</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[MongoDB for Developers Certificate]]></title>
